@@ -1,4 +1,4 @@
-# CirclePoint Homes - Property Booking Platform
+Property Booking Platform
 
 A modern, full-stack property booking platform built with Next.js, Supabase, and TypeScript. Features comprehensive booking management, visa invitation support, and admin dashboard.
 
