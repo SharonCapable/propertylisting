@@ -10,15 +10,15 @@ interface Property {
   id: string
   title: string
   description: string
-  type: string
+  type: string | null
   price_per_night: number
   location: string
   images: string[]
   max_guests: number
   bedrooms: number
   bathrooms: number
-  available_from?: string
-  available_to?: string
+  available_from?: string | null
+  available_to?: string | null
   amenities?: string[]
 }
 
@@ -70,7 +70,7 @@ export function PropertyCard({ property, viewMode = 'grid' }: PropertyCardProps)
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="font-semibold text-xl">{property.title}</h3>
-                      <Badge variant="secondary">{property.type}</Badge>
+                      <Badge variant="secondary">{property.type || 'Property'}</Badge>
                     </div>
                     <div className="flex items-center text-gray-600 mb-2">
                       <MapPin className="h-4 w-4 mr-1" />
@@ -160,7 +160,7 @@ export function PropertyCard({ property, viewMode = 'grid' }: PropertyCardProps)
             </div>
           )}
           <div className="absolute top-2 left-2">
-            <Badge variant="secondary">{property.type}</Badge>
+            <Badge variant="secondary">{property.type || 'Property'}</Badge>
           </div>
         </div>
         <CardContent className="p-4">

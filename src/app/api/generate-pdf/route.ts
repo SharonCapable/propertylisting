@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import PDFDocument from 'pdfkit';
 import { supabase } from '@/lib/supabase';
 
+export const runtime = 'nodejs';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const bookingId = searchParams.get('bookingId');
@@ -36,8 +38,8 @@ export async function GET(req: NextRequest) {
     }
 
     const doc = new PDFDocument({ margin: 50 });
-    const buffers: any[] = [];
-    doc.on('data', buffers.push.bind(buffers));
+    const buffers: Buffer[] = [];
+    doc.on('data', (chunk: Buffer) => buffers.push(chunk));
 
     if (type === 'booking') {
       // Generate Booking Receipt PDF
@@ -49,22 +51,21 @@ export async function GET(req: NextRequest) {
 
     doc.end();
 
-    return new Promise((resolve) => {
-        doc.on('end', () => {
-            const pdfData = Buffer.concat(buffers);
-            const filename = type === 'booking' 
-              ? `booking-receipt-${bookingId}.pdf`
-              : `visa-invitation-${bookingId}.pdf`;
-            
-            const response = new NextResponse(pdfData, {
-                status: 200,
-                headers: {
-                    'Content-Type': 'application/pdf',
-                    'Content-Disposition': `attachment; filename="${filename}"`,
-                },
-            });
-            resolve(response);
-        });
+    await new Promise<void>((resolve) => {
+      doc.on('end', () => resolve());
+    });
+
+    const pdfData = Buffer.concat(buffers);
+    const filename = type === 'booking'
+      ? `booking-receipt-${bookingId}.pdf`
+      : `visa-invitation-${bookingId}.pdf`;
+
+    return new NextResponse(pdfData, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      },
     });
 
   } catch (error: any) {

@@ -59,7 +59,7 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
           .not('location', 'is', null);
         
         if (!error && data) {
-          const uniqueLocations = [...new Set(data.map(p => p.location))];
+          const uniqueLocations = Array.from(new Set(data.map(p => p.location)));
           setExistingLocations(uniqueLocations);
         }
       } catch (err) {
@@ -79,7 +79,7 @@ export function SearchFilters({ onSearch }: SearchFiltersProps) {
       );
       
       // Remove duplicates and limit to 8 suggestions
-      const uniqueFiltered = [...new Set(filtered)].slice(0, 8);
+      const uniqueFiltered = Array.from(new Set(filtered)).slice(0, 8);
       setLocationSuggestions(uniqueFiltered);
       setShowSuggestions(uniqueFiltered.length > 0);
     } else {

@@ -71,7 +71,7 @@ export default function HomePage() {
     // Apply type filter
     if (selectedType !== 'All Types') {
       results = results.filter(property => 
-        property.type.toLowerCase() === selectedType.toLowerCase()
+        property.type?.toLowerCase() === selectedType.toLowerCase()
       );
     }
 
